@@ -17,7 +17,7 @@ func main() {
         panic(err)
     }
     bot.Debug = true
-    fmt.Printf("Authorized on account %s", bot.Self.UserName)
+    fmt.Printf("Authorized on account %s\n", bot.Self.UserName)
 
     // Getting updates
     u := telegram.NewUpdate(0)
@@ -28,7 +28,7 @@ func main() {
             continue
         }
 
-        fmt.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
+        fmt.Printf("[%s] %s\n", update.Message.From.UserName, update.Message.Text)
         msg := telegram.NewMessage(update.Message.Chat.ID, update.Message.Text)
         msg.ReplyToMessageID = update.Message.MessageID
 
