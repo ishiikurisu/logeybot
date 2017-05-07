@@ -1,3 +1,3 @@
 # Logey
 
-Let's implement [Logey](http://logey.herokuapp.com/) on [Telegram](https://telegram.org)?
+Let's a create a better Logey? For Telegram??s

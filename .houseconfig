@@ -1,8 +1,0 @@
-{
-  "edit": {
-    "editor": "atom"
-  },
-  "build": {
-    "command": "make -f makes/logey.makefile do"
-  }
-}
