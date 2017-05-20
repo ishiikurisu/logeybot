@@ -6,6 +6,7 @@ import (
     "github.com/ishiikurisu/logeybot/controller"
 )
 
+// The entry point of this application. Creates a Telegram bot
 func main() {
     // Setup bot
 	bot, err := telegram.NewBotAPI(os.Args[1])
