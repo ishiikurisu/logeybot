@@ -3,11 +3,11 @@ package controller
 import (
     "github.com/ishiikurisu/logey"
     "github.com/ishiikurisu/logeybot/model"
+    "github.com/ishiikurisu/logeybot/view"
 )
 
 type Controller struct {
     ID int64
-    // TODO Add a Logey here
     Logey logey.Log
     // TODO Add a view entity here
 }
@@ -26,6 +26,5 @@ func NewController(inlet int64) Controller {
 // Generates the correct answer depending on the current controller's state
 // the command given by the user.
 func (c *Controller) Listen(message string) string {
-    // TODO Implement a view entity to deal with listening to messages
-    return message
+    return view.Listen(c, message)
 }

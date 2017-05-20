@@ -22,7 +22,7 @@ func main() {
     // Putting bot to work depending on messages
 	for update := range updates {
 		if update.Message != nil {
-            // TODO Do this on parallel
+            // IDEA Do this on parallel
             identification := update.Message.Chat.ID
             if _, ok := controllers[identification]; !ok {
                 dummy := controller.NewController(identification)
