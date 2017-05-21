@@ -3,6 +3,7 @@ package controller
 import (
     "github.com/ishiikurisu/logey"
     "github.com/ishiikurisu/logeybot/model"
+    "github.com/ishiikurisu/logeybot/view"
     "strings"
 )
 
@@ -10,6 +11,7 @@ type Controller struct {
     ID int64
     Logey logey.Log
     // TODO Add a view entity here
+    View view.Conversation
 }
 
 // Creates a new controller for that id.
@@ -19,6 +21,7 @@ func NewController(inlet int64) Controller {
     c := Controller {
         ID: inlet,
         Logey: logey.LogFromString(storedLog),
+        View: nil,
     }
     return c
 }
