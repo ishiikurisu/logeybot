@@ -3,7 +3,7 @@ package controller
 import (
     "github.com/ishiikurisu/logey"
     "github.com/ishiikurisu/logeybot/model"
-    "github.com/ishiikurisu/logeybot/view"
+    "strings"
 )
 
 type Controller struct {
@@ -26,5 +26,14 @@ func NewController(inlet int64) Controller {
 // Generates the correct answer depending on the current controller's state
 // the command given by the user.
 func (c *Controller) Listen(message string) string {
-    return view.Listen(c, message)
+    outlet := ""
+
+    if strings.HasPrefix(message, "/add") {
+        // TODO Start add conversation
+        outlet = "how about we add something?"
+    } else {
+        outlet = "wtf?"
+    }
+
+    return outlet
 }

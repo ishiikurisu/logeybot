@@ -8,7 +8,6 @@ import (
 
 // The entry point of this application. Creates a Telegram bot
 func main() {
-    // Setup bot
 	bot, err := telegram.NewBotAPI(os.Args[1])
 	if err != nil {
         panic(err)
@@ -17,9 +16,7 @@ func main() {
 	u := telegram.NewUpdate(0)
 	u.Timeout = 60
 	updates, err := bot.GetUpdatesChan(u)
-    // Load previous states from memory
     controllers := make(map[int64]*controller.Controller)
-    // Putting bot to work depending on messages
 	for update := range updates {
 		if update.Message != nil {
             // IDEA Do this on parallel
