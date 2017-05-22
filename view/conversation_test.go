@@ -9,8 +9,31 @@ func TestCanCreateANewConversation(t *testing.T) {
     }
     talk := NewConversation(questions)
     if len(talk.Steps) != len(talk.Answers) {
-        t.Fatalf("TODO Give a more meaningful log here")
+        t.Fatalf("Invalid talk structure")
     }
 }
 
 // TODO Make bot listen to stuff and move from topic to topic
+func TestConversationFlow(t *testing.T) {
+    questions := []string {
+        "how are you?",
+        "how old are you?",
+    }
+    talk := NewConversation(questions)
+    for talk.IsUp() {
+        talk.Speak()
+        talk.Listen("meh")
+    }
+    for _, answer := range talk.Answers {
+        if answer != "meh" {
+            t.Fatalf("Not all questions answered")
+        }
+    }
+}
+
+func TestIfEmptyConversationKeepsStopped(t *testing.T) {
+    blah := CreateEmptyConversation()
+    if blah.IsUp() {
+        t.Fatalf("Empty talk is up #wtf")
+    }
+}

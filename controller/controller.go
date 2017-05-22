@@ -31,11 +31,19 @@ func NewController(inlet int64) Controller {
 func (c *Controller) Listen(message string) string {
     outlet := ""
 
-    // TODO Continue conversation
-
-    if strings.HasPrefix(message, "/add") {
-        // TODO Start add conversation
-        outlet = "how about we add something?"
+    if c.View.IsUp() {
+        c.View.Listen(message)
+        if !c.View.IsUp() {
+            // TODO Save data on memory
+            // QUESTION Will this ending depend on the conversation kind?
+            outlet = "Data saved on memory!"
+            c.View = view.CreateEmptyConversation()
+        } else {
+            outlet = c.View.Speak()
+        }
+    } else if strings.HasPrefix(message, "/add") {
+        c.View = view.NewAdditionConversation()
+        outlet = c.View.Speak()
     } else {
         outlet = "wtf?"
     }

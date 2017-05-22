@@ -5,6 +5,7 @@ type Conversation struct {
     Steps []string
     Answers []string
     Topic int
+    Kind string
 }
 
 /* ######################
@@ -16,7 +17,7 @@ func CreateEmptyConversation() Conversation {
     talk := Conversation {
         Steps: nil,
         Answers: nil,
-        Topic: 0,
+        Topic: -1,
     }
     return talk
 }
@@ -42,17 +43,18 @@ func NewConversation(steps []string) Conversation {
 
 // Check if there are any more steps to this conversation
 func (talk *Conversation) IsUp() bool {
-    return len(talk.Steps) <= talk.Topic
+    return (len(talk.Steps) > talk.Topic) && (!talk.IsEmpty())
 }
 
 // Gives the next question
 func (talk *Conversation) Speak() string {
-    return talk.Steps[0]
+    return talk.Steps[talk.Topic]
 }
 
 // Listen to the answer to the question and moves the next one
 func (talk *Conversation) Listen(answer string) string {
-    // TODO Implement listening algorithm
+    talk.Answers[talk.Topic] = answer
+    talk.Topic++
     return answer
 }
 
@@ -61,3 +63,10 @@ func (talk *Conversation) Listen(answer string) string {
    ########################## */
 
 // TODO Implement addition conversation
+func NewAdditionConversation() Conversation {
+    questions := []string {
+        "What?",
+        "How much?",
+    }
+    return NewConversation(questions)
+}
