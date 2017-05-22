@@ -21,7 +21,7 @@ func NewController(inlet int64) Controller {
     c := Controller {
         ID: inlet,
         Logey: logey.LogFromString(storedLog),
-        View: nil,
+        View: view.CreateEmptyConversation(),
     }
     return c
 }
@@ -30,6 +30,8 @@ func NewController(inlet int64) Controller {
 // the command given by the user.
 func (c *Controller) Listen(message string) string {
     outlet := ""
+
+    // TODO Continue conversation
 
     if strings.HasPrefix(message, "/add") {
         // TODO Start add conversation

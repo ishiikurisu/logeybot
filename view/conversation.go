@@ -7,6 +7,29 @@ type Conversation struct {
     Topic int
 }
 
+/* ######################
+   # EMPTY CONVERSATION #
+   ###################### */
+
+// Creates an empty view
+func CreateEmptyConversation() Conversation {
+    talk := Conversation {
+        Steps: nil,
+        Answers: nil,
+        Topic: 0,
+    }
+    return talk
+}
+
+// Checks if a conversation is empty
+func (talk *Conversation) IsEmpty() bool {
+    return talk.Steps == nil
+}
+
+/* ######################
+   # CONVERSATION LOGIC #
+   ###################### */
+
 // Creates a new conversation
 func NewConversation(steps []string) Conversation {
     talk := Conversation {
@@ -32,3 +55,9 @@ func (talk *Conversation) Listen(answer string) string {
     // TODO Implement listening algorithm
     return answer
 }
+
+/* ##########################
+   # SPECIFIC CONVERSATIONS #
+   ########################## */
+
+// TODO Implement addition conversation
