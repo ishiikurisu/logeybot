@@ -13,7 +13,6 @@ func TestCanCreateANewConversation(t *testing.T) {
     }
 }
 
-// TODO Make bot listen to stuff and move from topic to topic
 func TestConversationFlow(t *testing.T) {
     questions := []string {
         "how are you?",

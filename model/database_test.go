@@ -9,3 +9,5 @@ func TestGenerationOfTargetFilesBasedOnIDs(t *testing.T) {
         t.Fatalf("expected %s != calculated %s\n", expected, calculated)
     }
 }
+
+// TODO Test if one can store and retrieve data from memory

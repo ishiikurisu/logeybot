@@ -35,7 +35,6 @@ func (controller *Controller) Listen(message string) string {
     if controller.View.IsUp() {
         controller.View.Listen(message)
         if !controller.View.IsUp() {
-            // TODO Save data on memory
             controller.Dump()
             // QUESTION Will this ending depend on the conversation kind?
             outlet = "Data saved on memory!"
@@ -48,6 +47,7 @@ func (controller *Controller) Listen(message string) string {
         outlet = controller.View.Speak()
     } else if strings.HasPrefix(message, "/get") {
         // TODO Add retrieve log logic
+        // TODO Prettify log before displaying it
         outlet = controller.Logey.ToString()
     } else {
         outlet = "wtf?"

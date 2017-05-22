@@ -62,7 +62,7 @@ func (talk *Conversation) Listen(answer string) string {
    # SPECIFIC CONVERSATIONS #
    ########################## */
 
-// TODO Implement addition conversation
+// Creates an addition conversation
 func NewAdditionConversation() Conversation {
     questions := []string {
         "What?",
