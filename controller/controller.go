@@ -44,8 +44,7 @@ func (controller *Controller) Listen(message string) string {
         controller.View = view.NewAdditionConversation()
         outlet = controller.View.Speak()
     } else if strings.HasPrefix(message, "/get") {
-        // TODO Prettify log before displaying it
-        outlet = controller.Logey.ToString()
+        outlet = view.Prettify(controller.Logey.ToString())
     } else if strings.HasPrefix(message, "/money") {
         outlet = fmt.Sprintf("%.2f$", controller.Logey.CalculateBalance())
     } else {
@@ -71,14 +70,18 @@ func (controller *Controller) BeUp(message string) string {
 
 // Creates a new entry and saves it to memory
 func (controller *Controller) Dump() string {
+    message := ""
     answers := controller.View.Answers
     what := answers[0]
     howMuch, oops := strconv.ParseFloat(answers[1], 64)
+
     if oops != nil {
-        return "Invalid input!"
+        message = "Invalid input!"
+    } else {
+        controller.Logey.Add(what, howMuch)
+        model.SaveLog(controller.ID, controller.Logey.ToString())
+        message = "Data saved on memory!"
     }
-    controller.Logey.Add(what, howMuch)
-    // TODO Save logey on memory
-    model.SaveLog(controller.ID, controller.Logey.ToString())
-    return "Data saved on memory!"
+
+    return message
 }
