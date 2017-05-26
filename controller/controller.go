@@ -19,7 +19,7 @@ type Controller struct {
 // Creates a new controller for that id.
 func NewController(inlet int64) Controller {
     // TODO Load previous Logey from memory if this ID already has a database entry
-    storedLog := model.LoadLog(inlet)
+    storedLog, _ := model.LoadLog(inlet)
     c := Controller {
         ID: inlet,
         Logey: logey.LogFromString(storedLog),
@@ -44,7 +44,6 @@ func (controller *Controller) Listen(message string) string {
         controller.View = view.NewAdditionConversation()
         outlet = controller.View.Speak()
     } else if strings.HasPrefix(message, "/get") {
-        // TODO Add retrieve log logic
         // TODO Prettify log before displaying it
         outlet = controller.Logey.ToString()
     } else if strings.HasPrefix(message, "/money") {
@@ -80,5 +79,6 @@ func (controller *Controller) Dump() string {
     }
     controller.Logey.Add(what, howMuch)
     // TODO Save logey on memory
+    model.SaveLog(controller.ID, controller.Logey.ToString())
     return "Data saved on memory!"
 }
