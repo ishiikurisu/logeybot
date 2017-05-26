@@ -33,14 +33,11 @@ func (controller *Controller) Listen(message string) string {
     outlet := ""
 
     if controller.View.IsUp() {
-        controller.View.Listen(message)
-        if !controller.View.IsUp() {
-            controller.Dump()
-            // QUESTION Will this ending depend on the conversation kind?
-            outlet = "Data saved on memory!"
+        if strings.HasPrefix(message, "/cancel") {
             controller.View = view.CreateEmptyConversation()
+            outlet = "Operation cancelled!"
         } else {
-            outlet = controller.View.Speak()
+            outlet = controller.BeUp(message)
         }
     } else if strings.HasPrefix(message, "/add") {
         controller.View = view.NewAdditionConversation()
@@ -51,6 +48,22 @@ func (controller *Controller) Listen(message string) string {
         outlet = controller.Logey.ToString()
     } else {
         outlet = "wtf?"
+    }
+
+    return outlet
+}
+
+func (controller *Controller) BeUp(message string) string {
+    outlet := ""
+
+    controller.View.Listen(message)
+    if !controller.View.IsUp() {
+        controller.Dump()
+        // QUESTION Will this ending depend on the conversation kind?
+        outlet = "Data saved on memory!"
+        controller.View = view.CreateEmptyConversation()
+    } else {
+        outlet = controller.View.Speak()
     }
 
     return outlet
