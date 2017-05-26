@@ -6,6 +6,7 @@ import (
     "github.com/ishiikurisu/logeybot/view"
     "strings"
     "strconv"
+    "fmt"
 )
 
 type Controller struct {
@@ -46,6 +47,8 @@ func (controller *Controller) Listen(message string) string {
         // TODO Add retrieve log logic
         // TODO Prettify log before displaying it
         outlet = controller.Logey.ToString()
+    } else if strings.HasPrefix(message, "/money") {
+        outlet = fmt.Sprintf("%.2f$", controller.Logey.CalculateBalance())
     } else {
         outlet = "wtf?"
     }
@@ -58,9 +61,7 @@ func (controller *Controller) BeUp(message string) string {
 
     controller.View.Listen(message)
     if !controller.View.IsUp() {
-        controller.Dump()
-        // QUESTION Will this ending depend on the conversation kind?
-        outlet = "Data saved on memory!"
+        outlet = controller.Dump()
         controller.View = view.CreateEmptyConversation()
     } else {
         outlet = controller.View.Speak()
@@ -70,13 +71,14 @@ func (controller *Controller) BeUp(message string) string {
 }
 
 // Creates a new entry and saves it to memory
-func (controller *Controller) Dump() {
+func (controller *Controller) Dump() string {
     answers := controller.View.Answers
     what := answers[0]
     howMuch, oops := strconv.ParseFloat(answers[1], 64)
     if oops != nil {
-        panic(oops)
+        return "Invalid input!"
     }
     controller.Logey.Add(what, howMuch)
     // TODO Save logey on memory
+    return "Data saved on memory!"
 }
