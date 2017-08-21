@@ -47,6 +47,8 @@ func (controller *Controller) Listen(message string) string {
         outlet = view.Prettify(controller.Logey.ToString())
     } else if strings.HasPrefix(message, "/money") {
         outlet = fmt.Sprintf("%.2f$", controller.Logey.CalculateBalance())
+    } else if strings.HasPrefix(message, "/export") {
+        outlet = model.GetIdFile(controller.ID)
     } else {
         outlet = "wtf?"
     }
@@ -84,4 +86,15 @@ func (controller *Controller) Dump() string {
     }
 
     return message
+}
+
+/* RANDOM FUNCS */
+
+// Checks if the message to be sent is text or file
+func GetMessageKind(message string) string {
+    kind := "text"
+    if strings.HasPrefix(message, "/export") {
+        kind = "file"
+    }
+    return kind
 }

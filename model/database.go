@@ -12,14 +12,14 @@ func getDataDir() string {
 }
 
 // Gets the full file name, including the data directory
-func getIdFile(id int64) string {
+func GetIdFile(id int64) string {
     return fmt.Sprintf("%s/%d.txt", getDataDir(), id)
 }
 
 // Loads a raw log from memory based on the user id.
 func LoadLog(id int64) (string, error) {
     raw := ""
-    target := getIdFile(id)
+    target := GetIdFile(id)
 
     if _, oops := os.Stat(target); oops != nil {
         return raw, oops
@@ -35,7 +35,7 @@ func LoadLog(id int64) (string, error) {
 
 // TODO Implement procedure to save log
 func SaveLog(id int64, log string) error {
-    target := getIdFile(id)
+    target := GetIdFile(id)
     file, oops := os.Create(target)
 
     if oops != nil {

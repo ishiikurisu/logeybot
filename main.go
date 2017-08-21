@@ -19,13 +19,18 @@ func main() {
     controllers := make(map[int64]*controller.Controller)
 	for update := range updates {
 		if update.Message != nil {
-            // IDEA Do this on parallel
             identification := update.Message.Chat.ID
             if _, ok := controllers[identification]; !ok {
                 dummy := controller.NewController(identification)
                 controllers[identification] = &dummy
             }
-    		msg := telegram.NewMessage(identification, controllers[identification].Listen(update.Message.Text))
+            // TODO Adapt this to receive files as well
+            var msg telegram.Chattable
+            if controller.GetMessageKind(update.Message.Text) == "text" {
+                msg = telegram.NewMessage(identification, controllers[identification].Listen(update.Message.Text))
+            } else {
+                msg = telegram.NewDocumentUpload(identification, controllers[identification].Listen(update.Message.Text))
+            }
     		bot.Send(msg)
 		}
 	}
