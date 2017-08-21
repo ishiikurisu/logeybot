@@ -16,5 +16,9 @@ func Prettify(inlet string) string {
         }
     }
 
-    return buffer.String()
+    outlet := buffer.String()
+    if len(outlet) == 0 {
+        outlet = "Nothing added yet!"
+    }
+    return outlet
 }

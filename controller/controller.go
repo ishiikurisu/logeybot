@@ -40,7 +40,7 @@ func (controller *Controller) Listen(message string) string {
         } else {
             outlet = controller.BeUp(message)
         }
-    } else if strings.HasPrefix(message, "/add") {
+    } else if strings.HasPrefix(message, "/add") || strings.HasPrefix(message, "/start") {
         controller.View = view.NewAdditionConversation()
         outlet = controller.View.Speak()
     } else if strings.HasPrefix(message, "/get") {
