@@ -33,7 +33,7 @@ func LoadLog(id int64) (string, error) {
     return raw, nil
 }
 
-// TODO Implement procedure to save log
+// Saves log in memory
 func SaveLog(id int64, log string) error {
     target := GetIdFile(id)
     file, oops := os.Create(target)

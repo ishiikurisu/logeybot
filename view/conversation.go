@@ -70,3 +70,5 @@ func NewAdditionConversation() Conversation {
     }
     return NewConversation(questions)
 }
+
+// TODO Create conversation for uploading files

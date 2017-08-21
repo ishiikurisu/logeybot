@@ -12,7 +12,6 @@ import (
 type Controller struct {
     ID int64
     Logey logey.Log
-    // TODO Add a view entity here
     View view.Conversation
 }
 
