@@ -7,13 +7,16 @@ import (
     "strings"
     "strconv"
     "fmt"
+    "time"
 )
+
 
 type Controller struct {
     ID int64
-    Logey logey.Log
+    Logey *logey.Log
     View view.Conversation
 }
+
 
 // Creates a new controller for that id.
 func NewController(inlet int64) Controller {
@@ -21,39 +24,49 @@ func NewController(inlet int64) Controller {
     storedLog, _ := model.LoadLog(inlet)
     c := Controller {
         ID: inlet,
-        Logey: logey.LogFromString(storedLog),
+        Logey: logey.Import(storedLog),
         View: view.CreateEmptyConversation(),
     }
     return c
 }
 
+
 // Generates the correct answer depending on the current controller's state
 // the command given by the user.
 func (controller *Controller) Listen(message string) string {
-    outlet := ""
+    outlet := "sorry, I didn't understand that."
 
-    if controller.View.IsUp() {
+    switch true {
+    case controller.View.IsUp():
         if strings.HasPrefix(message, "/cancel") {
             controller.View = view.CreateEmptyConversation()
             outlet = "Operation cancelled!"
         } else {
             outlet = controller.BeUp(message)
         }
-    } else if strings.HasPrefix(message, "/add") || strings.HasPrefix(message, "/start") {
+    break
+
+    case strings.HasPrefix(message, "/add") || strings.HasPrefix(message, "/start"):
         controller.View = view.NewAdditionConversation()
         outlet = controller.View.Speak()
-    } else if strings.HasPrefix(message, "/get") {
-        outlet = view.Prettify(controller.Logey.ToString())
-    } else if strings.HasPrefix(message, "/money") {
-        outlet = fmt.Sprintf("%.2f$", controller.Logey.CalculateBalance())
-    } else if strings.HasPrefix(message, "/export") {
+    break
+
+    case strings.HasPrefix(message, "/get"):
+        outlet = view.Prettify(controller.Logey.Export())
+    break
+
+    case strings.HasPrefix(message, "/money"):
+        outlet = fmt.Sprintf("%.2f$", controller.Logey.Balance)
+    break
+
+    case strings.HasPrefix(message, "/export"):
         outlet = model.GetIdFile(controller.ID)
-    } else {
-        outlet = "wtf?"
+    break
     }
 
     return outlet
 }
+
 
 func (controller *Controller) BeUp(message string) string {
     outlet := ""
@@ -69,6 +82,7 @@ func (controller *Controller) BeUp(message string) string {
     return outlet
 }
 
+
 // Creates a new entry and saves it to memory
 func (controller *Controller) Dump() string {
     message := ""
@@ -79,8 +93,8 @@ func (controller *Controller) Dump() string {
     if oops != nil {
         message = "Invalid input!"
     } else {
-        controller.Logey.Add(what, howMuch)
-        model.SaveLog(controller.ID, controller.Logey.ToString())
+        controller.Logey.DescribeEntry(what, howMuch, make([]string, 0), time.Now())
+        model.SaveLog(controller.ID, controller.Logey.Export())
         message = "Data saved on memory!"
     }
 
@@ -88,6 +102,7 @@ func (controller *Controller) Dump() string {
 }
 
 /* RANDOM FUNCS */
+
 
 // Checks if the message to be sent is text or file
 func GetMessageKind(message string) string {

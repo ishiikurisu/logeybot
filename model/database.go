@@ -6,15 +6,12 @@ import (
     "os"
 )
 
-// Gets the data directory
-func getDataDir() string {
-    return "./data/logeybot"
-}
 
 // Gets the full file name, including the data directory
 func GetIdFile(id int64) string {
-    return fmt.Sprintf("%s/%d.txt", getDataDir(), id)
+    return fmt.Sprintf("./data/logeybot/%d.txt", id)
 }
+
 
 // Loads a raw log from memory based on the user id.
 func LoadLog(id int64) (string, error) {
@@ -32,6 +29,7 @@ func LoadLog(id int64) (string, error) {
 
     return raw, nil
 }
+
 
 // Saves log in memory
 func SaveLog(id int64, log string) error {
