@@ -3,9 +3,7 @@ build:
     local: false
     commands:
     - house build github.com/ishiikurisu/logey
-    - gofmt -w src/github.com/ishiikurisu/logeybot/main.go
-    - go test github.com/ishiikurisu/logeybot/model
-    - go test github.com/ishiikurisu/logeybot/view
+    - gofmt -w src/github.com/ishiikurisu/logeybot
     - go build github.com/ishiikurisu/logeybot
 execute:
     local: false

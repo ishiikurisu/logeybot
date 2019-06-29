@@ -1,114 +1,71 @@
 package controller
 
 import (
-    "github.com/ishiikurisu/logey"
-    "github.com/ishiikurisu/logeybot/model"
-    "github.com/ishiikurisu/logeybot/view"
-    "strings"
-    "strconv"
-    "fmt"
-    "time"
+	"github.com/ishiikurisu/logeybot/model"
+	"github.com/ishiikurisu/logeybot/view"
+	"strings"
 )
 
+type PossibleState int
 
+const (
+	IDLE PossibleState = iota
+	WAITING_DESCRIPTION
+)
+
+// This is the basic struct to
 type Controller struct {
-    ID int64
-    Logey *logey.Log
-    View view.Conversation
+	Model *model.Model
+	State PossibleState
 }
-
 
 // Creates a new controller for that id.
-func NewController(inlet int64) Controller {
-    // TODO Load previous Logey from memory if this ID already has a database entry
-    storedLog, _ := model.LoadLog(inlet)
-    c := Controller {
-        ID: inlet,
-        Logey: logey.Import(storedLog),
-        View: view.CreateEmptyConversation(),
-    }
-    return c
+func NewController(id int64) Controller {
+	c := Controller{
+		Model: model.NewModel(id),
+		State: IDLE,
+	}
+	return c
 }
-
 
 // Generates the correct answer depending on the current controller's state
 // the command given by the user.
 func (controller *Controller) Listen(message string) string {
-    outlet := "sorry, I didn't understand that."
+	outlet := "sorry, I didn't understand that."
 
-    switch true {
-    case controller.View.IsUp():
-        if strings.HasPrefix(message, "/cancel") {
-            controller.View = view.CreateEmptyConversation()
-            outlet = "Operation cancelled!"
-        } else {
-            outlet = controller.BeUp(message)
-        }
-    break
+	switch controller.State {
+	case IDLE:
+		if strings.HasPrefix(message, "/cancel") {
+			outlet = "I wasn't doing anything anyways..."
+		} else if strings.HasPrefix(message, "/add") ||
+			strings.HasPrefix(message, "/start") {
+			controller.State = WAITING_DESCRIPTION
+			outlet = "Tell me more about it..."
+		} else if strings.HasPrefix(message, "/money") {
+			outlet = view.BalanceMessage(controller.Model.GetBalance())
+		}
+		break
 
-    case strings.HasPrefix(message, "/add") || strings.HasPrefix(message, "/start"):
-        controller.View = view.NewAdditionConversation()
-        outlet = controller.View.Speak()
-    break
+	case WAITING_DESCRIPTION:
+		if strings.HasPrefix(message, "/cancel") {
+			outlet = "Operation cancelled"
+		} else {
+			controller.State = IDLE
+			if oops := controller.Model.Update(message); oops == nil {
+				outlet = view.BalanceMessage(controller.Model.GetBalance())
+			}
+		}
+		break
+	}
 
-    case strings.HasPrefix(message, "/get"):
-        outlet = view.Prettify(controller.Logey.Export())
-    break
-
-    case strings.HasPrefix(message, "/money"):
-        outlet = fmt.Sprintf("%.2f$", controller.Logey.Balance)
-    break
-
-    case strings.HasPrefix(message, "/export"):
-        outlet = model.GetIdFile(controller.ID)
-    break
-    }
-
-    return outlet
+	return outlet
 }
-
-
-func (controller *Controller) BeUp(message string) string {
-    outlet := ""
-
-    controller.View.Listen(message)
-    if !controller.View.IsUp() {
-        outlet = controller.Dump()
-        controller.View = view.CreateEmptyConversation()
-    } else {
-        outlet = controller.View.Speak()
-    }
-
-    return outlet
-}
-
-
-// Creates a new entry and saves it to memory
-func (controller *Controller) Dump() string {
-    message := ""
-    answers := controller.View.Answers
-    what := answers[0]
-    howMuch, oops := strconv.ParseFloat(answers[1], 64)
-
-    if oops != nil {
-        message = "Invalid input!"
-    } else {
-        controller.Logey.DescribeEntry(what, howMuch, make([]string, 0), time.Now())
-        model.SaveLog(controller.ID, controller.Logey.Export())
-        message = "Data saved on memory!"
-    }
-
-    return message
-}
-
-/* RANDOM FUNCS */
-
 
 // Checks if the message to be sent is text or file
 func GetMessageKind(message string) string {
-    kind := "text"
-    if strings.HasPrefix(message, "/export") {
-        kind = "file"
-    }
-    return kind
+	kind := "text"
+	if strings.HasPrefix(message, "/export") {
+		kind = "file"
+	}
+	return kind
 }
