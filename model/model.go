@@ -46,6 +46,16 @@ func (model Model) GetBalance() float64 {
 	return model.Log.Balance
 }
 
+// Gets the entries
+func (model Model) GetDescriptions() []string {
+	// TODO Refactor this function
+	outlet := make([]string, 0)
+	for _, entry := range model.Log.Entries {
+		outlet = append(outlet, fmt.Sprintf("%s: %.2f", entry.How, entry.HowMuch))
+	}
+	return outlet
+}
+
 // Gets the full file name, including the data directory
 func getIdFile(id int64) string {
 	return fmt.Sprintf("./data/logeybot/%d.jsonl", id)

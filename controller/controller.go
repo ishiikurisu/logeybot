@@ -43,6 +43,8 @@ func (controller *Controller) Listen(message string) string {
 			outlet = "Tell me more about it..."
 		} else if strings.HasPrefix(message, "/money") {
 			outlet = view.BalanceMessage(controller.Model.GetBalance())
+		} else if strings.HasPrefix(message, "/get") {
+			outlet = view.LogMessage(controller.Model.GetDescriptions())
 		}
 		break
 
